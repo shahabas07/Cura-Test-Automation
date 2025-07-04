@@ -1,0 +1,15 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+venv/
+.env/
+
+# Test reports
+*.html
+reports/
+
+# System files
+.DS_Store
