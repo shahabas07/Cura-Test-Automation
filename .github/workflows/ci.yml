@@ -32,4 +32,4 @@ jobs:
 
       - name: Run Tests (Headless)
         run: |
-          pytest tests/ --disable-warnings -maxfail=2
+          pytest tests/ --disable-warnings --maxfail=2
