@@ -12,5 +12,5 @@ def browser():
     driver = webdriver.Chrome(service=service, options=options)
     driver.maximize_window()
 
-    yield driver  # Pass driver to test
+    yield driver 
     driver.quit()

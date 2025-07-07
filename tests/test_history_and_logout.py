@@ -31,5 +31,4 @@ def test_logout_redirects_to_homepage(browser):
     menu = SidebarMenuPage(browser)
     menu.logout()
 
-    # Check user is redirected to login page
     assert "CURA Healthcare" in browser.title or "home" in browser.current_url.lower()

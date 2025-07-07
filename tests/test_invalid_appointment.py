@@ -11,7 +11,7 @@ def test_appointment_missing_date(browser):
         facility="Tokyo CURA Healthcare Center",
         readmission=False,
         program="Medicaid",
-        visit_date="",  # Intentionally left blank
+        visit_date="",  # Intentionally blank
         comment="No visit date"
     )
 
