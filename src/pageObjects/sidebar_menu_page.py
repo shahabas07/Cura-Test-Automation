@@ -20,18 +20,18 @@ class SidebarMenuPage(BasePage):
     #     self.click(self.MENU_BUTTON)
 
     def open_menu(self):
+    # Instead of storing element early, always find it fresh
         WebDriverWait(self.driver, self.timeout).until(
             EC.element_to_be_clickable(self.MENU_BUTTON)
         ).click()
         time.sleep(0.5)
 
 
-
     def go_to_history(self):
+        self.wait_for_page_load() 
         self.open_menu()
-        self.wait_for_element(self.HISTORY_LINK)  # ← Add this
+        self.wait_for_element(self.HISTORY_LINK)
         self.click(self.HISTORY_LINK)
-
 
     def go_to_home(self):
         self.open_menu()
@@ -42,11 +42,10 @@ class SidebarMenuPage(BasePage):
         self.click(self.PROFILE_LINK)
 
     def logout(self):
+        self.wait_for_page_load()
         self.open_menu()
+        self.wait_for_element(self.LOGOUT_LINK)
+        self.click(self.LOGOUT_LINK)
 
-        # Re-fetch logout button to avoid stale reference
-        WebDriverWait(self.driver, self.timeout).until(
-            EC.element_to_be_clickable(self.LOGOUT_LINK)
-        ).click()
 
 
