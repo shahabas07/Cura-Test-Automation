@@ -13,3 +13,4 @@ reports/
 
 # System files
 .DS_Store
+allure-results/
