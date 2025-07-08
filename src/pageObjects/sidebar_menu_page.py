@@ -43,7 +43,10 @@ class SidebarMenuPage(BasePage):
 
     def logout(self):
         self.open_menu()
+
+        # Re-fetch logout button to avoid stale reference
         WebDriverWait(self.driver, self.timeout).until(
             EC.element_to_be_clickable(self.LOGOUT_LINK)
         ).click()
+
 
