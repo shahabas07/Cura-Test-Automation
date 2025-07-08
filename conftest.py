@@ -2,13 +2,15 @@ import pytest
 from selenium import webdriver
 import os
 import datetime
+import tempfile
 
 @pytest.fixture
 def browser(request):
     options = webdriver.ChromeOptions()
+    tmp_profile_dir = tempfile.mkdtemp()
 
     # Optional headless setup (make configurable via marker later)
-    if False:
+    if True:
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -16,7 +18,7 @@ def browser(request):
         options.add_argument("--disable-gpu")
         options.add_argument("--disable-extensions")
         options.add_argument("--remote-debugging-port=9222")
-        options.add_argument("--user-data-dir=/tmp/chrome-profile")
+        options.add_argument(f"--user-data-dir={tmp_profile_dir}")
 
     options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
 
