@@ -25,12 +25,14 @@ jobs:
           pip install -r requirements.txt
           pip install pytest-html allure-pytest
 
-      - name: Set up Chrome
+      - name: Set up Google Chrome
         run: |
-          sudo apt update
-          sudo apt install -y chromium-browser chromium-chromedriver
-          sudo ln -s /usr/bin/chromium-browser /usr/bin/chrome
-          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg unzip
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+          echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
       - name: Create test results directory
         run: |
@@ -39,7 +41,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          # Clear root PNGs before running tests
           find . -maxdepth 1 -name "*.png" -delete || true
           
           pytest tests/ \
@@ -51,11 +52,10 @@ jobs:
             --reruns 2 \
             --reruns-delay 1
           
-          # Move all screenshots to the folder (if any were left outside)
           find . -maxdepth 1 -name "*.png" -exec mv {} test-results/screenshots/ \; || true
 
       - name: Upload all test artifacts
-        uses: actions/upload-artifact@v4   # ✅ Updated from v3 to v4
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-artifacts
