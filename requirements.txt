@@ -2,3 +2,4 @@ selenium==4.34.0
 pytest==8.4.1
 pytest-html==4.1.1
 allure-pytest==2.14.3
+pytest-rerunfailures==15.1
