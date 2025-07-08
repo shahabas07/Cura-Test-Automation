@@ -39,8 +39,8 @@ jobs:
 
       - name: Run Tests
         run: |
-          # Move any existing screenshots to the organized directory first
-          find . -name "*.png" -exec mv {} test-results/screenshots/ \; || true
+          # Clear root PNGs before running tests
+          find . -maxdepth 1 -name "*.png" -delete || true
           
           pytest tests/ \
             --disable-warnings \
@@ -51,11 +51,11 @@ jobs:
             --reruns 2 \
             --reruns-delay 1
           
-          # Move any new screenshots created during tests
-          find . -name "*.png" -exec mv {} test-results/screenshots/ \; || true
+          # Move all screenshots to the folder (if any were left outside)
+          find . -maxdepth 1 -name "*.png" -exec mv {} test-results/screenshots/ \; || true
 
       - name: Upload all test artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4   # ✅ Updated from v3 to v4
         if: always()
         with:
           name: test-artifacts
