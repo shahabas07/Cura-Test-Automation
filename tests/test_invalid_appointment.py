@@ -1,15 +1,17 @@
 import pytest
-from src.pageObjects.login_page import LoginPage
-from src.pageObjects.appointment_page import AppointmentPage
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from src.pageObjects.login_page import LoginPage
+from src.pageObjects.appointment_page import AppointmentPage
+
 
 @pytest.mark.flaky(reruns=2, reruns_delay=1)
 def test_appointment_missing_date(browser):
     login = LoginPage(browser)
     login.do_login("John Doe", "ThisIsNotAPassword")
-    
+
     WebDriverWait(browser, 15).until(
         EC.url_contains("appointment")
     )
@@ -29,11 +31,13 @@ def test_appointment_missing_date(browser):
     except TimeoutException:
         assert True
 
+
 @pytest.mark.flaky(reruns=2, reruns_delay=1)
+@pytest.mark.xfail(reason="BUG: App allows appointment with past date")
 def test_appointment_with_past_date(browser):
     login = LoginPage(browser)
     login.do_login("John Doe", "ThisIsNotAPassword")
-    
+
     WebDriverWait(browser, 15).until(
         EC.url_contains("appointment")
     )

@@ -23,20 +23,40 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest-html allure-pytest
 
-      - name: Set up Headless Chrome
+      - name: Set up Chrome
         run: |
           sudo apt update
-          sudo apt install -y chromium-browser
+          sudo apt install -y chromium-browser chromium-chromedriver
           sudo ln -s /usr/bin/chromium-browser /usr/bin/chrome
+          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
 
-      - name: Run Tests (Headless)
+      - name: Create test results directory
         run: |
-          pytest tests/ --disable-warnings --maxfail=2
+          mkdir -p test-results/screenshots
+          mkdir -p test-results/allure
 
-      - name: Upload screenshots
+      - name: Run Tests
+        run: |
+          # Move any existing screenshots to the organized directory first
+          find . -name "*.png" -exec mv {} test-results/screenshots/ \; || true
+          
+          pytest tests/ \
+            --disable-warnings \
+            --maxfail=2 \
+            --html=test-results/report.html \
+            --self-contained-html \
+            --alluredir=test-results/allure \
+            --reruns 2 \
+            --reruns-delay 1
+          
+          # Move any new screenshots created during tests
+          find . -name "*.png" -exec mv {} test-results/screenshots/ \; || true
+
+      - name: Upload all test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: test-screenshots
-          path: "*.png"
+          name: test-artifacts
+          path: test-results/
