@@ -24,7 +24,7 @@ def browser():
     options = webdriver.ChromeOptions()
 
     # For CI: run in headless mode
-    Headless = False
+    Headless = True
     if Headless:
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
