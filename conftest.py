@@ -1,20 +1,3 @@
-# import pytest
-# from selenium import webdriver
-# from selenium.webdriver.chrome.service import Service
-
-# @pytest.fixture
-# def browser():
-#     options = webdriver.ChromeOptions()
-#     options.binary_location = "/usr/local/bin/chromium-114/chrome"
-
-#     service = Service(executable_path="/usr/local/bin/chromedriver")
-
-#     driver = webdriver.Chrome(service=service, options=options)
-#     driver.maximize_window()
-
-#     yield driver 
-#     driver.quit()
-
 import pytest
 from selenium import webdriver
 import os
@@ -30,7 +13,10 @@ def browser():
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-    # If running locally with custom Chrome
+    # 🔧 Prevent SessionNotCreatedException in CI
+    options.add_argument("--user-data-dir=/tmp/unique-profile")
+
+    # Use custom Chrome binary if running locally
     chrome_path = "/usr/local/bin/chromium-114/chrome"
     if os.path.exists(chrome_path):
         options.binary_location = chrome_path
