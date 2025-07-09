@@ -1,7 +1,11 @@
 # Cura-Test-Automation (QA Project)
 
-## 🔍 About
-This project is built to test the CURA Hospital Appointment web application using both manual and automated testing techniques following QA best practices.
+![CI](https://github.com/shahabas07/Cura-Test-Automation/actions/workflows/ci.yml/badge.svg)
+
+---
+
+## 🔍 About  
+This project is built to test the CURA Hospital Appointment web application using both manual and automated testing techniques, following QA best practices. The automated framework uses Selenium WebDriver in Python, built with the Page Object Model (POM) design pattern and integrated into CI/CD using GitHub Actions.
 
 ---
 
@@ -27,30 +31,38 @@ Bugs identified during manual exploratory testing, including reproducible steps 
 ---
 
 ## 🧪 Testing Types
-- Manual Functional Testing
-- Automated UI Testing (with Selenium WebDriver)
+- ✅ Manual Functional Testing
+- ✅ Automated UI Testing using Selenium
+- ✅ Negative Testing (invalid and missing inputs)
+- ✅ Regression Testing via PyTest
+- ✅ CI-based Smoke Testing
 
 ---
 
 ## 🔧 Tools & Technologies
-- **Language:** Python
-- **Automation Framework:** Selenium WebDriver + PyTest (with Page Object Model)
-- **Reporting:** pytest-html (for HTML test reports)
-- **Test Runner:** PyTest
-- **Browser:** Chrome (via ChromeDriver)
-- **Platform:** Linux (tested in VS Code)
+
+| Category     | Tools Used                            |
+|--------------|----------------------------------------|
+| Language     | Python                                 |
+| Automation   | Selenium WebDriver, PyTest             |
+| Design Pattern | Page Object Model (POM)             |
+| Reporting    | pytest-html                            |
+| CI/CD        | GitHub Actions                         |
+| Test Runner  | PyTest                                 |
+| Browser      | Chrome (Headless in CI)                |
+| Environment  | VS Code on Linux                       |
 
 ---
 
 ## 📦 Installation & Running Tests
 
 ```bash
-# Create and activate virtual environment
+# 1. Create and activate virtual environment
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# Run all tests
+# 3. Run all tests with HTML report
 pytest tests/ --html=report.html
