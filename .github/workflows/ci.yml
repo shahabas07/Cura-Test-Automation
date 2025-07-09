@@ -25,9 +25,9 @@ jobs:
           pip install -r requirements.txt
           pip install pytest-html allure-pytest
 
-      - name: Install Chrome 114.0.5675.0 manually
+      - name: Install Chrome 114.0.5735.90 manually
         run: |
-          wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/114.0.5675.0/linux64/chrome-linux64.zip
+          wget https://storage.googleapis.com/chrome-for-testing-public/114.0.5735.90/linux64/chrome-linux64.zip
           unzip chrome-linux64.zip
           sudo mv chrome-linux64 /opt/chrome114
           sudo ln -sf /opt/chrome114/chrome /usr/bin/google-chrome
