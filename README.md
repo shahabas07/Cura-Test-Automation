@@ -41,16 +41,16 @@ Bugs identified during manual exploratory testing, including reproducible steps 
 
 ## 🔧 Tools & Technologies
 
-| Category     | Tools Used                            |
-|--------------|----------------------------------------|
-| Language     | Python                                 |
-| Automation   | Selenium WebDriver, PyTest             |
+| Category       | Tools Used                            |
+|----------------|-------------------------------------|
+| Language       | Python                              |
+| Automation     | Selenium WebDriver, PyTest          |
 | Design Pattern | Page Object Model (POM)             |
-| Reporting    | pytest-html                            |
-| CI/CD        | GitHub Actions                         |
-| Test Runner  | PyTest                                 |
-| Browser      | Chrome (Headless in CI)                |
-| Environment  | VS Code on Linux                       |
+| Reporting      | pytest-html, allure-pytest          |
+| CI/CD          | GitHub Actions                     |
+| Test Runner    | PyTest                             |
+| Browser        | Chrome (Headless in CI)             |
+| Environment    | VS Code on Linux                    |
 
 ---
 
@@ -66,3 +66,19 @@ pip install -r requirements.txt
 
 # 3. Run all tests with HTML report
 pytest tests/ --html=report.html
+```
+
+---
+
+## 🚀 CI/CD and Browser Versions
+
+This project is integrated with GitHub Actions for continuous integration, running automated tests on every push and pull request to the main branch.
+
+### Installed Browser & Driver versions in CI:
+
+| Component    | Version       |
+|--------------|---------------|
+| Chrome       | 114.0.5675.0  |
+| ChromeDriver | 114.0.5735.90 |
+
+Logs and screenshots from test runs are automatically saved and uploaded as artifacts for easy debugging.
