@@ -1,27 +1,27 @@
 import pytest
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-
+from selenium.webdriver.support import expected_conditions as EC
 from src.pageObjects.login_page import LoginPage
 from src.pageObjects.appointment_page import AppointmentPage
 from src.pageObjects.sidebar_menu_page import SidebarMenuPage
 from src.pageObjects.history_page import HistoryPage
 
+
 @pytest.mark.flaky(reruns=3, reruns_delay=2)
 def test_appointment_shows_in_history(browser):
     try:
-        # Login
+        # Step 1: Login
         login = LoginPage(browser)
         login.do_login("John Doe", "ThisIsNotAPassword")
 
-        # Wait for appointment page to load
+        # Step 2: Wait until the appointment page is loaded
         WebDriverWait(browser, 20).until(
             lambda d: "appointment" in d.current_url.lower() or
                       "make appointment" in d.page_source.lower()
         )
 
-        # Create appointment
+        # Step 3: Book the appointment
         appointment = AppointmentPage(browser)
         appointment.make_appointment(
             facility="Seoul CURA Healthcare Center",
@@ -31,24 +31,24 @@ def test_appointment_shows_in_history(browser):
             comment="History check test"
         )
 
-        # Verify appointment confirmation
+        # Step 4: Confirm appointment via explicit wait
         WebDriverWait(browser, 20).until(
             EC.text_to_be_present_in_element(
-                appointment.CONFIRMATION_SECTION, 
+                AppointmentPage.CONFIRMATION_MESSAGE,
                 "Appointment Confirmation"
             )
         )
 
-        # Navigate to history
+        # Step 5: Navigate to History
         menu = SidebarMenuPage(browser)
         menu.go_to_history()
 
-        # Verify appointment in history
+        # Step 6: Verify that the appointment is listed
         history = HistoryPage(browser)
-        WebDriverWait(browser, 20).until(
+        WebDriverWait(browser, 10).until(
             lambda d: history.is_appointment_listed()
         )
-        
+
     except TimeoutException as e:
         pytest.fail(f"Timeout occurred: {str(e)}")
     except Exception as e:
@@ -56,27 +56,15 @@ def test_appointment_shows_in_history(browser):
 
 @pytest.mark.flaky(reruns=3, reruns_delay=2)
 def test_logout_redirects_to_homepage(browser):
-    try:
-        # Login
-        login = LoginPage(browser)
-        login.do_login("John Doe", "ThisIsNotAPassword")
+    login = LoginPage(browser)
+    login.do_login("John Doe", "ThisIsNotAPassword")
 
-        # Wait for appointment page
-        WebDriverWait(browser, 20).until(
-            lambda d: "appointment" in d.current_url.lower() or
-                      "make appointment" in d.page_source.lower()
-        )
+    WebDriverWait(browser, 20).until(
+        lambda d: "appointment" in d.current_url.lower() or
+                  "make appointment" in d.page_source.lower()
+    )
 
-        # Logout
-        menu = SidebarMenuPage(browser)
-        menu.logout()
+    menu = SidebarMenuPage(browser)
+    menu.logout()
 
-        # Verify logout
-        WebDriverWait(browser, 20).until(
-            lambda d: "CURA Healthcare" in d.title or "home" in d.current_url.lower()
-        )
-        
-    except TimeoutException as e:
-        pytest.fail(f"Timeout occurred: {str(e)}")
-    except Exception as e:
-        pytest.fail(f"Test failed due to unexpected error: {str(e)}")
+    assert "CURA Healthcare" in browser.title or "home" in browser.current_url.lower()
