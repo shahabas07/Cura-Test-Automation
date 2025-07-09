@@ -25,29 +25,25 @@ jobs:
           pip install -r requirements.txt
           pip install pytest-html allure-pytest
 
-      - name: Install Google Chrome 114
+      - name: Install Chrome 114.0.5675.0 manually
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip curl gnupg lsb-release
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
+          wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/114.0.5675.0/linux64/chrome-linux64.zip
+          unzip chrome-linux64.zip
+          sudo mv chrome-linux64 /opt/chrome114
+          sudo ln -sf /opt/chrome114/chrome /usr/bin/google-chrome
 
-          # Ensure version is 114
-          CHROME_VERSION=$(google-chrome --version)
-          echo "Chrome version: $CHROME_VERSION"
-          if [[ ! $CHROME_VERSION == *"114."* ]]; then
-            echo "❌ Chrome version mismatch. Expected 114.x"
-            exit 1
-          fi
-
-      - name: Install ChromeDriver 114
+      - name: Install ChromeDriver 114.0.5735.90
         run: |
-          CHROMEDRIVER_VERSION=114.0.5735.90
-          wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+          wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/chromedriver
           sudo chmod +x /usr/local/bin/chromedriver
           chromedriver --version
+
+      - name: Confirm Installed Versions
+        run: |
+          echo "✅ Chrome version: $(google-chrome --version)"
+          echo "✅ ChromeDriver version: $(chromedriver --version)"
 
       - name: Create test results directory
         run: |
@@ -66,7 +62,7 @@ jobs:
             --alluredir=test-results/allure \
             --reruns 2 \
             --reruns-delay 1
-
+          
           find . -maxdepth 1 -name "*.png" -exec mv {} test-results/screenshots/ \; || true
 
       - name: Upload all test artifacts

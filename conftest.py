@@ -1,7 +1,6 @@
 import pytest
 from selenium import webdriver
 import os
-import datetime
 import tempfile
 
 @pytest.fixture
@@ -9,8 +8,8 @@ def browser(request):
     options = webdriver.ChromeOptions()
     tmp_profile_dir = tempfile.mkdtemp()
 
-    # Optional headless setup (make configurable via marker later)
-    if True:
+    # Optional headless setup
+    if False:
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -31,15 +30,32 @@ def browser(request):
     driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(5)
 
+    # ✅ Log versions
+    # chrome_version = driver.capabilities.get("browserVersion")
+    # driver_version = driver.capabilities.get("chrome", {}).get("chromedriverVersion", "unknown").split(' ')[0]
+
+    # print(f"\n✅ Chrome version: {chrome_version}")
+    # print(f"✅ ChromeDriver version: {driver_version}")
+
     yield driver
 
     # Save success screenshot before teardown
     if request.node.rep_call.passed:
         save_screenshot(driver, request.node, passed=True)
 
-    # Print browser logs
-    print("\nBrowser logs:")
+    # ✅ Print filtered browser logs
+    print("\n📜 Filtered Browser Logs:")
     for entry in driver.get_log("browser"):
+        message = entry.get("message", "")
+        
+        # Skip noisy logs
+        if any(skip in message for skip in [
+            "favicon.ico",
+            "Slow network is detected",
+            "Fallback font will be used"
+        ]):
+            continue
+
         print(entry)
 
     driver.quit()
@@ -52,7 +68,6 @@ def save_screenshot(driver, node, passed=False):
     os.makedirs(folder, exist_ok=True)
 
     status = "PASSED" if passed else "FAILED"
-    # No timestamp → overwrite previous run's screenshot
     screenshot_path = os.path.join(folder, f"{status}_{test_name}.png")
 
     try:
