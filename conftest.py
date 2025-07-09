@@ -9,7 +9,7 @@ def browser(request):
     tmp_profile_dir = tempfile.mkdtemp()
 
     # Optional headless setup
-    if False:
+    if True:
         options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
